@@ -7,10 +7,10 @@
 ***************************************************************************
 %}
 clear all; close all;
-% Parâmetros
+% ParÃ¢metros
 neuronios_ocultos = 30;
 etapas = 10000;
-% Entrada e Saída
+% Entrada e SaÃ­da
 %{
 x=[0:0.1:2*pi];
 y1=  sin(x)+randn(1,length(x))/100;
@@ -29,10 +29,10 @@ load('RedWine.mat');
 entrada=[alcohol chlorides citricacid density fixedacidity freesulfurdioxide pH residualsugar sulphates totalsulfurdioxide volatileacidity];
 saida=quality;
 if size(entrada,1) ~= size(saida,1)
-    disp('ERRO: pares entrada/saída com quantidades diferentes')
+    disp('ERRO: pares entrada/saÃ­da com quantidades diferentes')
    return 
 end    
-% Normalizar pares entrada/saída
+% Normalizar pares entrada/saÃ­da
 % Entradas
 %entrada=entrada';
 media_entrada = mean(entrada);
@@ -41,7 +41,7 @@ for i=1:size(entrada,2)
     entrada(:,i) = (entrada(:,i) - media_entrada(1,i)) / desvio_padrao_entrada(1,i);
 end;
 %entrada=entrada';
-% Saídas
+% SaÃ­das
 %saida = saida';
 media_saida = mean(saida);
 desvio_padrao_saida = std(saida);
@@ -53,7 +53,7 @@ end;
 pares_treinamento = size(entrada,1);
 bias = ones(pares_treinamento,1);
 entrada = [entrada bias];
-% Verifica número de entradas e saídas
+% Verifica nÃºmero de entradas e saÃ­das
 n_entradas  = size(entrada,2);
 n_saidas = size(saida,2);
 %Inicializa pesos entre -0.05 e 0.05
@@ -62,14 +62,14 @@ pesos_oculta_saida    = (randn(n_saidas,neuronios_ocultos)    - 0.5)/10;
 erromin=1e99; errmin=1e99;
 %%
 %---------------
-% Botão de parada
+% BotÃ£o de parada
 set(0, 'DefaultFigurePosition', [ 100 100 500 500 ]);
 hstop = uicontrol('Style','PushButton','String','Pare', 'Position', [5 5 70 20],'callback','earlystop = 1;'); 
 earlystop = 0;
-%Botão para zerar pesos
+%BotÃ£o para zerar pesos
 hreset = uicontrol('Style','PushButton','String','Zerar Pesos', 'Position', get(hstop,'position')+[75 0 0 0],'callback','reset = 1;'); 
 reset = 0;
-% Botão de taxa de aprendizado
+% BotÃ£o de taxa de aprendizado
 hlr = uicontrol('Style','slider','value',.1,'Min',.01,'Max',1,'SliderStep',[0.01 0.1],'Position', get(hreset,'position')+[75 0 100 0]);
 %---------------
 
@@ -81,7 +81,7 @@ for iter = 1:etapas
     %alr = 0.2;
     alr = 0.01;
     blr = alr / 10;
-        %Seleção aleatória dos pares_treinamento em cada etapa
+        %SeleÃ§Ã£o aleatÃ³ria dos pares_treinamento em cada etapa
     for j = 1:pares_treinamento
         npar = round((rand * pares_treinamento) + 0.5);
         if npar > pares_treinamento
@@ -133,7 +133,7 @@ for iter = 1:etapas
         delta_IH = 2 * alr * par_atual_entrada' * gamma';
         pesos_entrada_oculta = pesos_entrada_oculta + delta_IH;
     end;
-    % gráficos
+    % grÃ¡ficos
     %saida = pesos_oculta_saida*tanh(entrada*pesos_entrada_oculta)';
     %erro = par_atual_saida - u_ext;
     %err(iter) =  sum(((sum(delta.^2)).^0.5).^2).^0.5;
@@ -149,25 +149,25 @@ for iter = 1:etapas
     figure(1);
     %clf;
     semilogy(err);
-    xlabel('Número de Épocas');
-    ylabel('Erro médio quadrático');
+    xlabel('NÃºmero de Ã‰pocas');
+    ylabel('Erro mÃ©dio quadrÃ¡tico');
     grid;
         
-    %reset weights if requested
+    
     if reset
         pesos_entrada_oculta  = (randn(n_entradas,neuronios_ocultos) - 0.5)/10;
         pesos_oculta_saida = (randn(n_saidas,neuronios_ocultos) - 0.5)/10;
-        fprintf('Pesos aleatórios na etapa %d\n',iter);
+        fprintf('Pesos aleatÃ³rios na etapa %d\n',iter);
         reset = 0;
     end
     
-    %stop if requested
+    
     if earlystop
         fprintf('Parada na etapa %d\n',iter); 
         break 
     end 
 
-    %stop if delta is small
+    
     if err(iter) < 1e-18 % 0.001
         fprintf('converged at epoch: %d\n',iter);
         break 
