@@ -13,12 +13,36 @@ etapas = 10000;
 % Entrada e Saída
 
 
+%{
+entrada1=[0 0; 0 1; 1 0; 1 1
+    0 0; 0 1; 1 0; 1 1
+    0 0; 0 1; 1 0; 1 1
+    0 0; 0 1; 1 0; 1 1
+    0 0; 0 1; 1 0; 1 1
+    0 0; 0 1; 1 0; 1 1
+    0 0; 0 1; 1 0; 1 1
+    0 0; 0 1; 1 0; 1 1
+    0 0; 0 1; 1 0; 1 1
+    0 0; 0 1; 1 0; 1 1
+    0 0; 0 1; 1 0; 1 1
+    ];
+saida1=[0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 ]';
+%}
+
+
+load('RedWhite1Wine.mat');
+entrada1=[alcohol chlorides citricacid fixedacidity sulphates totalsulfurdioxide volatileacidity density residualsugar pH freesulfurdioxide];
+saida1=quality;
+%}
+
+%{
 x=[0:0.1:2*pi];
 y1=  sin(x)+randn(1,length(x))/100;
 y2= -sin(x)+randn(1,length(x))/100;
 
 entrada1=x';
-saida1=y2';
+saida1=[ y2'];
+%}
 
 media_entrada = mean(entrada1);
 desvio_padrao_entrada = std(entrada1);
@@ -41,40 +65,26 @@ pvalida=p(round(length(entrada1)*0.8):length(entrada1));
 
 
 for i=1:length(px)
-entrada(i)=entrada1(px(i));
-saida(i)=saida1(px(i));
+entrada(i,:)=entrada1(px(i),:);
+saida(i,:)=saida1(px(i),:);
 end;
 for i=1:length(pteste)
-teste(i)=entrada1(pteste(i));
-saida_teste(i)=saida1(pteste(i));
+teste(i,:)=entrada1(pteste(i),:);
+saida_teste(i,:)=saida1(pteste(i),:);
 end;
 for i=1:length(pvalida)
-valida(i)=entrada1(pvalida(i));
-saida_valida(i)=saida1(pvalida(i));
+valida(i,:)=entrada1(pvalida(i),:);
+saida_valida(i,:)=saida1(pvalida(i),:);
 end;
-
+%{
 entrada=entrada';
 saida=saida';
 teste=teste';
 saida_teste=saida_teste';
 valida=valida';
 saida_valida=saida_valida';
-
 %}
 
-%{
-entrada=[0 0;
-   0 1;
-   1 0;
-   1 1];
-saida=[0 1 1 0]';
-%}
-
-%{
-load('RedWine.mat');
-entrada=[alcohol chlorides citricacid density fixedacidity freesulfurdioxide pH residualsugar sulphates totalsulfurdioxide volatileacidity];
-saida=quality;
-%}
 
 
 if size(entrada,1) ~= size(saida,1)
